@@ -27,6 +27,10 @@ class InterviewController extends Controller
             ->map(fn (Application $a) => [
                 'id' => $a->id,
                 'label' => "{$a->applicant->name} ({$a->jobPost->title})",
+                'name' => $a->applicant->name,
+                'job' => $a->jobPost->title,
+                'status' => $a->status,
+                'applied' => $a->created_at->diffForHumans(),
             ]);
 
         $upcoming = Interview::with(['application.applicant:id,name', 'application.jobPost:id,title'])
@@ -43,6 +47,8 @@ class InterviewController extends Controller
                 'is_today' => $i->scheduled_at->isToday(),
                 'time_range' => $i->scheduled_at->format('g:i A').' - '.$i->scheduled_at->copy()->addMinutes($i->duration_minutes)->format('g:i A'),
                 'link' => $i->meeting_link,
+                'round' => $i->round,
+                'date' => $i->scheduled_at->toDateString(),
             ]);
 
         return Inertia::render('Employer/Interviews', [

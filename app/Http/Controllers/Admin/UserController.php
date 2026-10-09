@@ -22,6 +22,7 @@ class UserController extends Controller
                 'email' => $u->email,
                 'company_name' => $u->company_name,
                 'role' => $u->roles->first()?->name,
+                'joined' => $u->created_at?->format('M j, Y'),
             ]);
 
         return Inertia::render('Admin/Users', ['users' => $users]);

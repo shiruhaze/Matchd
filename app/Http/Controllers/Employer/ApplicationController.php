@@ -31,9 +31,13 @@ class ApplicationController extends Controller
                     'applicant' => $a->applicant->name,
                     'email' => $a->applicant->email,
                     'job' => $a->jobPost->title,
+                    'job_id' => $a->job_post_id,
                     'matched_skills' => $matched,
+                    'required_skills' => $a->jobPost->skills->count(),
                     'match' => MatchScore::percent($a->jobPost, $a->applicant->skills->pluck('id')),
                     'status' => $a->status,
+                    'applied' => $a->created_at->diffForHumans(),
+                    'applied_at' => $a->created_at->timestamp,
                 ];
             })
             ->sortByDesc('match')
@@ -44,6 +48,8 @@ class ApplicationController extends Controller
             'stats' => [
                 'total' => $applications->count(),
                 'pending' => $applications->where('status', Application::PENDING)->count(),
+                'to_review' => $applications->whereIn('status', [Application::PENDING, Application::UNDER_REVIEW])->count(),
+                'avg_match' => (int) round($applications->avg('match') ?? 0),
                 'interviews' => Interview::where('status', 'scheduled')
                     ->whereHas('application.jobPost', fn ($q) => $q->where('employer_id', $request->user()->id))
                     ->count(),

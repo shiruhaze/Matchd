@@ -1,23 +1,36 @@
 import { Link } from '@inertiajs/react';
-import { Pencil } from 'lucide-react';
-import { Card, PageTitle, SkillChip, StatusBadge } from '../../../Components/ui';
+import { ArrowLeft, Briefcase, Pencil } from 'lucide-react';
+import { HeaderAction } from '../../../Components/PageHeader';
+import { Card, SkillChip, StatusBadge } from '../../../Components/ui';
 import AppLayout from '../../../Layouts/AppLayout';
 import { salaryRange } from '../../../lib/utils';
 
 export default function Show({ job }) {
     return (
-        <AppLayout title={job.title} width="max-w-5xl">
-            <PageTitle title={job.title} subtitle={`${job.location ?? 'Location TBD'} • ${salaryRange(job.salary_min, job.salary_max)} / mo • Posted ${job.posted}`}>
-                <div className="flex items-center gap-3">
-                    <StatusBadge status={job.status} />
-                    <Link
-                        href={`/employer/jobs/${job.id}/edit`}
-                        className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs px-4 py-2 rounded-xl transition flex items-center gap-1.5"
-                    >
-                        <Pencil className="w-3.5 h-3.5" /> Edit
-                    </Link>
-                </div>
-            </PageTitle>
+        <AppLayout
+            title={job.title}
+            width="max-w-5xl"
+            header={{
+                eyebrow: 'Employer · Job post',
+                eyebrowIcon: Briefcase,
+                title: job.title,
+                subtitle: `${job.location ?? 'Location TBD'} · ${salaryRange(job.salary_min, job.salary_max)} / mo · Posted ${job.posted}`,
+                actions: (
+                    <>
+                        {/* White backing keeps the light status badge readable on the dark banner */}
+                        <span className="rounded-full bg-white p-0.5">
+                            <StatusBadge status={job.status} />
+                        </span>
+                        <HeaderAction href="/employer/jobs" icon={ArrowLeft} variant="ghost">
+                            My jobs
+                        </HeaderAction>
+                        <HeaderAction href={`/employer/jobs/${job.id}/edit`} icon={Pencil}>
+                            Edit
+                        </HeaderAction>
+                    </>
+                ),
+            }}
+        >
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <Card className="lg:col-span-2 p-6 space-y-5">

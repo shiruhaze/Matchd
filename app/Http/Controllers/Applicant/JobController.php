@@ -36,11 +36,14 @@ class JobController extends Controller
                 'company' => $job->employer->company_name ?? $job->employer->name,
                 'location' => $job->location,
                 'work_setup' => $job->work_setup,
+                'employment_type' => $job->employment_type,
                 'salary_min' => $job->salary_min,
                 'salary_max' => $job->salary_max,
                 'description' => $job->description,
                 'skills' => $job->skills->pluck('name'),
                 'match' => MatchScore::percent($job, $skillIds),
+                'posted' => $job->created_at->diffForHumans(),
+                'posted_at' => $job->created_at->timestamp,
             ])
             ->sortByDesc('match')
             ->values();
@@ -62,6 +65,7 @@ class JobController extends Controller
         return Inertia::render('Applicant/Jobs', [
             'jobs' => $jobs,
             'filters' => ['q' => $request->query('q', '')],
+            'mySkills' => $user->skills->pluck('name'),
             'appliedJobIds' => $user->applications()->pluck('job_post_id'),
             'activeApplications' => $activeApplications,
             'matchedCount' => $jobs->where('match', '>', 0)->count(),

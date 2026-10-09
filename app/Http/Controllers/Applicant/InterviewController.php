@@ -35,6 +35,9 @@ class InterviewController extends Controller
                 'note' => $i->note,
                 'status' => $i->status,
                 'is_past' => $i->scheduled_at->isPast() && ! $i->scheduled_at->isToday(),
+                'starts_at' => $i->scheduled_at->toIso8601String(),
+                'ends_at' => $i->scheduled_at->copy()->addMinutes($i->duration_minutes)->toIso8601String(),
+                'relative' => $i->scheduled_at->diffForHumans(),
             ]);
 
         return Inertia::render('Applicant/Interviews', [

@@ -1,4 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
+import { BrandMark } from '../Components/Brand';
 
 export default function AuthLayout({ title, heading, subtitle, footer, children }) {
     return (
@@ -7,7 +8,7 @@ export default function AuthLayout({ title, heading, subtitle, footer, children 
 
             <div className="hidden lg:flex lg:w-5/12 bg-slate-900 flex-col justify-between p-12 text-white relative overflow-hidden">
                 <Link href="/" className="z-10">
-                    <img src="/images/matchd-logo-white.png" alt="Matchd" className="h-7 w-auto" />
+                    <BrandMark tone="light" className="w-36" />
                 </Link>
 
                 <div className="z-10 my-auto max-w-md">
@@ -28,7 +29,7 @@ export default function AuthLayout({ title, heading, subtitle, footer, children 
             <div className="w-full lg:w-7/12 flex items-center justify-center p-6 sm:p-12">
                 <div className="w-full max-w-md space-y-6 bg-white p-8 sm:p-10 rounded-2xl shadow-sm border border-slate-100">
                     <Link href="/" className="lg:hidden block">
-                        <img src="/images/matchd-logo-black.png" alt="Matchd" className="h-6 w-auto" />
+                        <BrandMark className="w-28" />
                     </Link>
 
                     <div>

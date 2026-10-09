@@ -40,10 +40,23 @@ class DashboardController extends Controller
                 'id' => $a->id,
                 'applicant' => $a->applicant->name,
                 'job' => $a->jobPost->title,
+                'job_id' => $a->job_post_id,
+                'status' => $a->status,
                 'when' => $a->created_at->diffForHumans(),
             ]);
 
+        $byStatus = (clone $applications)
+            ->selectRaw('status, count(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
         return Inertia::render('Employer/Dashboard', [
+            'pipeline' => collect([
+                Application::PENDING,
+                Application::UNDER_REVIEW,
+                Application::INTERVIEW_SCHEDULED,
+                Application::DECLINED,
+            ])->mapWithKeys(fn (string $status) => [$status => (int) ($byStatus[$status] ?? 0)]),
             'stats' => [
                 'active_jobs' => JobPost::where('employer_id', $employerId)->published()->count(),
                 'applicants' => (clone $applications)->count(),
